@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'login/' # Redirect after logout
 
-AUTH_USER_MODEL = 'relationship_app.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 
 # Application definition
