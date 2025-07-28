@@ -1,14 +1,16 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import Book, Author, Library, Librarian, CustomUser, UserProfile
 
-class CustomUserAdmin(UserAdmin):
-    model = CustomUser
-    fieldsets = UserAdmin.fieldsets + (
-        ("Additional Info", {"fields": ("date_of_birth", "profile_photo")}),
-    )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ("Additional Info", {"fields": ("date_of_birth", "profile_photo")}),
-    )
+# Book admin
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author')  # Removed 'publication_year'
+    list_filter = ('author',)           # Removed 'publication_year'
+    search_fields = ('title', 'author__name')  # Searching through related author's name
 
-admin.site.register(CustomUser, CustomUserAdmin)
+# Register all relevant models
+admin.site.register(Book, BookAdmin)
+admin.site.register(Author)
+admin.site.register(Library)
+admin.site.register(Librarian)
+admin.site.register(CustomUser)
+admin.site.register(UserProfile)
