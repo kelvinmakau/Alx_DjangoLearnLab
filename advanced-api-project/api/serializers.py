@@ -4,6 +4,7 @@ from datetime import datetime
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Book
         fields = ['id', 'title', 'author', 'publication_year']
 
     def validate_publication_year(self, value):
@@ -17,4 +18,5 @@ class BookSerializer(serializers.ModelSerializer):
 class AuthorSerializer(serializers.ModelSerializer):
     books = BookSerializer(many=True, read_only=True) # Nested serialized of books
     class Meta:
+        model = Author
         fields = ['id', 'name', 'books']
