@@ -3,9 +3,10 @@ from .models import Author, Book
 from datetime import datetime
 
 class BookSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.name', read_only=True) # To show the author name
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'publication_year']
+        fields = ['id', 'title', 'author', 'publication_year', 'author_name']
 
     def validate_publication_year(self, value):
         current_year = datetime.now().year

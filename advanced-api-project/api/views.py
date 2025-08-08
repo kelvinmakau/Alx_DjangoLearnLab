@@ -21,21 +21,21 @@ class BookDetailView(generics.RetrieveAPIView):
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    # permission_classes = [permissions.IsAuthenticated] # User must be authenticated
+    permission_classes = [IsAuthenticated] # User must be authenticated
 
     # custom assigns the current user as creator when book is created
     def perform_create(self, serializer):
         # Save the book
-        serializer.save
+        serializer.save()
 
 # Update book details, must be authenticated
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = IsAuthenticated # Must be authenticated/logged in
+    permission_classes = [IsAuthenticated] # Must be authenticated/logged in
 
 # Delete an existing book. Must be authenticated
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated] # Must be authenticated/logged in
+    permission_classes = [IsAuthenticated] # Must be authenticated/logged in
