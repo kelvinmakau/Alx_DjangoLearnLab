@@ -17,3 +17,15 @@
 
 - CSRF tokens on all forms
 - Passwords hashed using Django’s authentication system
+
+# Blog Post Features
+
+## URLS
+
+- /posts/          -> list
+  - /posts/new/      -> create (login required)
+  - /posts/<pk>/     -> detail
+  - /posts/<pk>/edit/-> edit (author only)
+  - /posts/<pk>/delete/ -> delete (author only)
+- Only the post author can edit/delete.
+- Forms use PostForm; author is set automatically in CreateView.
