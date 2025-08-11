@@ -8,13 +8,25 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <header>
+    <header class="navbar">
         <nav>
             <ul>
-                <li><a href="{% url 'profile' %}">Home</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background:none;border:none;color:blue;cursor:pointer;">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+                <!-- <li><a href="{% url 'profile' %}">Home</a></li>
                 <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'register' %}">Register</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li> -->
+
             </ul>
         </nav>
     </header>
@@ -26,7 +38,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 Django Blog</p>
+        <p>&copy; 2025 Django Blog</p>
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>

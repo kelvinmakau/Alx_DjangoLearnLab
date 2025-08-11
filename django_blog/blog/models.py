@@ -15,7 +15,7 @@ class Post(models.Model): # Define a Post model
     def __str__(self): # String representation of the Post model
         return self.title
     
-class Profile(models.Model):
+class Profile(models.Model): # Define a Profile model
     user = models.OneToOneField(User, on_delete=models.CASCADE) # One-to-one relationship with User model
     bio = models.TextField(blank=True) # Optional biography field
     profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True) # Optional profile picture field

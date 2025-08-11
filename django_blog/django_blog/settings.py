@@ -122,8 +122,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'blog/static',]
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'blog/static',]
+
+LOGIN_REDIRECT_URL = 'profile'  # Redirect to profile after login
+LOGOUT_REDIRECT_URL = 'login'  # Redirect to login after logout
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
