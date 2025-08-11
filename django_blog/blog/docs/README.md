@@ -18,9 +18,7 @@
 - CSRF tokens on all forms
 - Passwords hashed using Django’s authentication system
 
-# Blog Post Features
-
-## URLS
+## Blog Post Features ## URLS
 
 - /posts/          -> list
   - /posts/new/      -> create (login required)
