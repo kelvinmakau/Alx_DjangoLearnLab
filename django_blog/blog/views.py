@@ -115,6 +115,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         post_id = self.kwargs['pk']  # Get the post ID from the URL
         form.instance.post = Post.objects.get(pk=post_id)
         form.instance.author = self.request.user  # Set the author to the logged-in user
+        self.object = form.save() # Save the comment instance
         return super().form_valid(form)  # Call the parent class's form_valid method
     
     def get_success_url(self):
