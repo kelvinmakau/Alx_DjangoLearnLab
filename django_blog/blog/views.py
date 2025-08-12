@@ -46,26 +46,7 @@ class PostDetailView(DetailView):
         context['comments'] = post.comments.all() # Get all comments related to the post
         context['comment_form'] = CommentForm()
 
-        return context  # Return the updated context
-    
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        
-        self.object = self.get_object()  # Get the current post object
-        form = CommentForm(request.POST)  # Create a form instance with POST data
-        if form.is_valid():
-            comment = form.save(commit=False)  # Create a comment instance without saving it yet
-            comment.post = self.object  # Set the post for the comment
-            comment.author = request.user  # Set the author of the comment to the logged-in user
-            comment.save()  # Save the comment instance
-            return redirect('post-detail', pk=self.object.pk)  # Redirect to the post detail page
-        
-        # If the form is not valid, render the post detail page with the form errors
-        context = self.get_context_data()
-        context['form'] = form
-        return self.render_to_response(context)  # Render the post detail page with the form errors
-            
+        return context  # Return the updated context            
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -125,3 +106,16 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm  # Use the CommentForm defined in forms.py
+
+    def form_valid(self, form):
+        post_id = self.kwargs['pk']  # Get the post ID from the URL
+        form.instance.post = Post.objects.get(pk=post_id)
+        form.instance.author = self.request.user  # Set the author to the logged-in user
+        return super().form_valid(form)  # Call the parent class's form_valid method
+    
+    def get_success_url(self):
+        return reverse('post-detail', kwargs={'pk': self.object.post.pk})  # Redirect to the post detail page after creation
