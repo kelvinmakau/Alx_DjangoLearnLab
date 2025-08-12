@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,6 +7,8 @@ from .models import Post, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse, reverse_lazy
+from taggit.models import Tag # Import Tag model for tagging functionality
+from django.db.models import Q  # Import Q for complex queries
 
 # Create your views here.
 def register_view(request):
@@ -120,3 +122,19 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     
     def get_success_url(self):
         return reverse('post-detail', kwargs={'pk': self.object.post.pk})  # Redirect to the post detail page after creation
+    
+def posts_by_tag(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)  # Get the tag object by slug
+    posts = Post.objects.filter(tags__in=[tag])  # Filter posts by the tag
+    return render(request, 'blog/posts_by_tag.html', {'tag': tag, 'posts': posts})  # Render the template with the posts
+
+def search_posts(request):
+    query = request.GET.get('q') # Get the search query from the request
+    results = [] # Initialize an empty list for search results
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query), 
+            Q(content__icontains=query),  # Search in title and content
+            Q(tags__name__icontains=query)  # Search in tags
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})  # Render the search results template

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User # Import necessary modules
+from taggit.managers import TaggableManager # Import TaggableManager for tagging functionality
 
 # Create your models here.
 class Post(models.Model): # Define a Post model
@@ -11,6 +12,7 @@ class Post(models.Model): # Define a Post model
         on_delete=models.CASCADE,
         related_name='posts'
     )
+    tags = TaggableManager() # Tags for the post using TaggableManager
 
     def __str__(self): # String representation of the Post model
         return self.title

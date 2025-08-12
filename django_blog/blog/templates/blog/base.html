@@ -20,6 +20,12 @@
                             <button type="submit" style="background:none;border:none;color:blue;cursor:pointer;">Logout</button>
                         </form>
                     </li>
+                    <li>
+                        <form method="get" action="{% url 'search-posts' %}">
+                            <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+                            <button type="submit">Search</button>
+                        </form>
+                    </li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>
                     <li><a href="{% url 'register' %}">Register</a></li>

@@ -20,7 +20,7 @@ class RegisterForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']  # Specify the fields to include in the form, automatically excludes 'author' and 'published_date'
+        fields = ['title', 'content', 'tags']  # Specify the fields to include in the form, automatically excludes 'author' and 'published_date'
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter post title'}), # TextInput widget for title
             'content': forms.Textarea(attrs={'rows': 8, 'placeholder': 'Write your post content here...'}), # Textarea widget for content
@@ -33,3 +33,6 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add a comment...'}), # Textarea widget for comment content
         }
+
+class SearchForm(forms.Form):
+    query = forms.CharField(label='Search', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Search posts...'}))  # Search form with a text input for the query
