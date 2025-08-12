@@ -123,10 +123,13 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('post-detail', kwargs={'pk': self.object.post.pk})  # Redirect to the post detail page after creation
     
-def posts_by_tag(request, tag_slug):
-    tag = get_object_or_404(Tag, slug=tag_slug)  # Get the tag object by slug
-    posts = Post.objects.filter(tags__in=[tag])  # Filter posts by the tag
-    return render(request, 'blog/posts_by_tag.html', {'tag': tag, 'posts': posts})  # Render the template with the posts
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_by_tag.html'  # create this template
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__name=self.kwargs.get('tag'))
 
 def search_posts(request):
     query = request.GET.get('q') # Get the search query from the request
