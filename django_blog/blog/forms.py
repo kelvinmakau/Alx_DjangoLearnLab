@@ -2,6 +2,7 @@ from django import forms # Import the forms module from Django
 from django.contrib.auth.models import User # Import the User model
 from django.contrib.auth.forms import UserCreationForm # Import the UserCreationForm
 from .models import Post, Comment # Import the Post and Comment models from the current app's models
+from taggit.forms import TagWidget # Import TagWidget for tag input in forms
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)  # Add an email field
@@ -24,6 +25,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter post title'}), # TextInput widget for title
             'content': forms.Textarea(attrs={'rows': 8, 'placeholder': 'Write your post content here...'}), # Textarea widget for content
+            'tags': TagWidget(attrs={'placeholder': 'Add tags (comma separated)'}),  # TagWidget for tags input
         }
 
 class CommentForm(forms.ModelForm):
