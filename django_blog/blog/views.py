@@ -103,7 +103,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == post.author
     
 # Edit and delete views for comments
-class CommentCreateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
     form_class = CommentForm  # CommentForm in forms.py
     template_name = 'blog/comment_form.html'  # blog/templates/blog/comment_form.html
