@@ -52,6 +52,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 ROOT_URLCONF = 'social_media_api.urls'
