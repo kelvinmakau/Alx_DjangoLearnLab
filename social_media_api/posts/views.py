@@ -23,3 +23,15 @@ class PostViewset(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+class CommentViewset(viewsets.ModelViewSet):
+    queryset = Comment.objects.select_related('post', 'author').all() # Fetch related post and author data
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['post']
+    search_fields = ['content']
+    ordering_fields = ['created_at', 'updated_at']
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
