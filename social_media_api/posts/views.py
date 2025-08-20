@@ -11,7 +11,7 @@ from .permissions import IsOwnerOrReadOnly
 # Create your views here.
 
 class PostViewset(viewsets.ModelViewSet):
-    queryset = Post.objects.select_related('author').all() # Fetch related author data to reduce queries
+    queryset = Post.objects.all() # Fetch related author data to reduce queries
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -25,7 +25,7 @@ class PostViewset(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 class CommentViewset(viewsets.ModelViewSet):
-    queryset = Comment.objects.select_related('post', 'author').all() # Fetch related post and author data
+    queryset = Comment.objects.all() # Fetch related post and author data
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
