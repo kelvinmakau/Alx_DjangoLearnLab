@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -46,8 +46,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
     
-class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+class FollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id, *args, **kwargs):
         target = get_object_or_404(CustomUser, pk=user_id)
@@ -77,11 +77,11 @@ class FollowUserView(APIView):
             status=status.HTTP_201_CREATED
         )
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
     """
     POST /auth/unfollow/<user_id>/
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id, *args, **kwargs):
         target = get_object_or_404(CustomUser, pk=user_id)
