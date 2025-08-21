@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
@@ -35,3 +35,16 @@ class CommentViewset(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    class FeedView(generics.GenericAPIView):
+        serializer_class = PostSerializer
+        permission_classes = [IsAuthenticated]
+
+        def get_queryset(self):
+            # Get all users that are being followed
+            following_users = self.request.user.following.all()
+
+            # Return posts from those users
+            return Post.objects.filter(author__in=following_users).order_by('-created_at')
+        
+        
