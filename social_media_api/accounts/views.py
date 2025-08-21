@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
@@ -45,4 +45,63 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id, *args, **kwargs):
+        target = get_object_or_404(CustomUser, pk=user_id)
+
+        # Prevent following self
+        if target.pk == request.user.pk:
+            return Response(
+                {"detail": "You cannot follow yourself"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if request.user.is_following(target):
+            return Response(
+                {
+                    "detail": "Already following.",
+                    "me": UserSerializer(request.user, context={"request": request}).data
+            },
+            status=status.HTTP_200_OK
+            )
+        
+        request.user.follow(target)
+        return Response(
+            {
+                "detail": "You are now following this user",
+                "me": UserSerializer(request.user, context={"request": request}).data
+            },
+            status=status.HTTP_201_CREATED
+        )
+
+class UnfollowUserView(APIView):
+    """
+    POST /auth/unfollow/<user_id>/
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id, *args, **kwargs):
+        target = get_object_or_404(CustomUser, pk=user_id)
+
+        if target.pk == request.user.pk:
+            return Response(
+                {"detail": "You cannot unfollow yourself."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not request.user.is_following(target):
+            # Not following → idempotent success
+            return Response(
+                {
+                    "detail": "You were not following.",
+                    "me": UserSerializer(request.user, context={"request": request}).data
+                },
+                status=status.HTTP_200_OK
+            )
+
+        request.user.unfollow(target)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

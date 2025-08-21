@@ -6,7 +6,6 @@ class CustomUser(AbstractUser):
     # Extends default user model - additional fields if needed
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True)
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
     def follow(self, user):
